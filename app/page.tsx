@@ -5,9 +5,9 @@ import { useState, useEffect } from 'react';
 export default function Home() {
   const [drawData, setDrawData] = useState('');
 
-  async function handleSubmit(e) {
+  async function handleSubmit(e: React.ChangeEvent<any>) {
     e.preventDefault();
-    const data = new FormData(e.currentTarget);
+    const data: any = new FormData(e.currentTarget);
     try {
       const response = await fetch('/api/draw', {
         method: 'post',
@@ -42,12 +42,7 @@ export default function Home() {
       <h1>Submit the Text you want to Draw</h1>
       <div className="message block">
         <label htmlFor="frm-message">Message</label>
-        <textarea
-          id="frm-message"
-          rows="6"
-          columns="20"
-          name="message"
-        ></textarea>
+        <textarea id="frm-message" rows={6} name="message"></textarea>
       </div>
       <div className="button block">
         <button type="submit">Draw</button>
