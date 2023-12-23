@@ -43,6 +43,9 @@ export default function Home() {
   return (
     <form className="container" onSubmit={handleSubmit}>
       <h1>Submit the Text you want to Draw</h1>
+      <h3>
+        <i>draw anything</i>
+      </h3>
       <div className="message block">
         <label htmlFor="frm-message">Message</label>
         <textarea id="frm-message" rows={6} name="message"></textarea>
