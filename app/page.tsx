@@ -4,11 +4,13 @@ import { useState, useEffect } from 'react';
 
 export default function Home() {
   const [drawData, setDrawData] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
   async function handleSubmit(e: React.ChangeEvent<any>) {
     e.preventDefault();
     const data: any = new FormData(e.currentTarget);
     try {
+      setIsLoading(true);
       const response = await fetch('/api/draw', {
         method: 'post',
         body: new URLSearchParams(data),
@@ -27,6 +29,7 @@ export default function Home() {
         const blobURL = URL.createObjectURL(blob);
         console.log('blobURL', blobURL);
         // const drawData = await response.json();
+        setIsLoading(false);
         setDrawData(blobURL);
       }
 
@@ -52,6 +55,10 @@ export default function Home() {
           Reload
         </button>
       </div>
+
+      {isLoading && (
+        <div className="text-center">Drawing your data .........</div>
+      )}
 
       {drawData && (
         <div className="text-center">
