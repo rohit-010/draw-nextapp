@@ -1,6 +1,7 @@
 'use client';
 import React from 'react';
 import { useState, useEffect } from 'react';
+import LoadingSpinner from './LoadingSpinner';
 
 export default function Home() {
   const [drawData, setDrawData] = useState('');
@@ -15,7 +16,8 @@ export default function Home() {
         method: 'post',
         body: new URLSearchParams(data),
       });
-      if (!response.ok) {
+      if (response.status != 200) {
+        setIsLoading(false);
         throw new Error(`Invalid response: ${response.status}`);
       }
 
@@ -36,38 +38,58 @@ export default function Home() {
       // alert('Thanks for contacting us, we will get back to you soon!');
     } catch (err) {
       console.error(err);
-      alert("We can't submit the form, try again later?");
+      alert('Error occurred in backend request, try again some time later?');
     }
   }
 
+  const downloadImage = () => {
+    const link = document.createElement('a');
+    link.href = drawData;
+    link.download = 'download';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   return (
-    <form className="container" onSubmit={handleSubmit}>
-      <h1>Submit the Text you want to Draw</h1>
-      <h3>
-        <i>draw anything</i>
-      </h3>
-      <div className="message block">
-        <label htmlFor="frm-message">Message</label>
-        <textarea id="frm-message" rows={6} name="message"></textarea>
-      </div>
-      <div className="button block">
-        <button type="submit">Draw</button>
-      </div>
-      <div className="button block">
-        <button type="button" onClick={() => document.location.reload()}>
-          Reload
-        </button>
-      </div>
+    <div>
+      <form className="container" onSubmit={handleSubmit}>
+        <h1>
+          You imagine and provide text input and we provide output in image
+        </h1>
+
+        <div className="message block">
+          <label htmlFor="frm-message">Message</label>
+          <textarea id="frm-message" rows={6} name="message"></textarea>
+        </div>
+        <div className="button-block block">
+          <button type="submit" disabled={isLoading}>
+            Draw
+          </button>
+          <button type="button" onClick={() => document.location.reload()}>
+            Reload
+          </button>
+        </div>
+      </form>
 
       {isLoading && (
-        <div className="text-center">Drawing your data .........</div>
+        <div>
+          <LoadingSpinner />
+        </div>
       )}
 
       {drawData && (
-        <div className="text-center">
-          <img src={drawData} alt="home"></img>
+        <div className="ai-image">
+          <div className="button block">
+            <button type="button" onClick={downloadImage}>
+              Download Image
+            </button>
+          </div>
+          <div className="text-center">
+            <img src={drawData} alt="home"></img>
+          </div>
         </div>
       )}
-    </form>
+    </div>
   );
 }
